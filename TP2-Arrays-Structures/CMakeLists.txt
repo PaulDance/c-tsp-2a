@@ -3,4 +3,4 @@ project(TP2_Arrays_Structures C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(TP2_Arrays_Structures main.c sort.c sort.h)
+add_executable(TP2_Arrays_Structures main.c sort.c sort.h grid.c grid.h)
