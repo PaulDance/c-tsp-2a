@@ -45,10 +45,6 @@ Grid* newGrid(size_t width, size_t height, char pixel) {
 	return grid;
 }
 
-//void printGridPoint(Grid* grid, size_t i, size_t j) {
-//	putchar(grid->matrix[grid->height - i - 1][j]);
-//}
-
 /**
  * Prints the given Grid structure value to stdout in an
  * indirect frame, i.e. the x axis is from top left to top

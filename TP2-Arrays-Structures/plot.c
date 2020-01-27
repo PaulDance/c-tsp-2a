@@ -30,9 +30,9 @@ Point lineMiddlePoint(Point p1, Point p2) {
  * @param pixel The pixel to draw with.
  */
 void plotVerticalLine(Grid* grid, size_t j, float i0f, float i1f, char pixel) {
-	size_t i1 = llrintf(i1f);
+	size_t i1 = (size_t) llrintf(i1f);
 	
-	for (size_t i = llrintf(i0f); i <= i1; i++) {
+	for (size_t i = (size_t) llrintf(i0f); i <= i1; i++) {
 		grid->matrix[i][j] = pixel;
 	}
 }

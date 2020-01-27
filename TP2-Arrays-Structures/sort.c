@@ -16,8 +16,8 @@
  * @param value The value to compute the correct position for.
  * @return The insertion index.
  */
-int getInsertIndex(float* array, int maxIndex, float value) {
-	for (int i = 0; i < maxIndex; i++) {
+size_t getInsertIndex(const float* array, size_t maxIndex, float value) {
+	for (size_t i = 0; i < maxIndex; i++) {
 		if (array[i] > value) {
 			return i;
 		}
@@ -35,8 +35,8 @@ int getInsertIndex(float* array, int maxIndex, float value) {
  * @param maxIndex The maximum index to consider.
  * @param value The value to insert.
  */
-void insertValueAt(float* array, int index, int maxIndex, float value) {
-	for (int i = maxIndex; i > index; i--) {
+void insertValueAt(float* array, size_t index, size_t maxIndex, float value) {
+	for (size_t i = maxIndex; i > index; i--) {
 		array[i] = array[i - 1];
 	}
 	
@@ -52,7 +52,7 @@ void insertValueAt(float* array, int index, int maxIndex, float value) {
  * 					is sorted.
  * @param value The value to insert.
  */
-void insertValue(float* array, int maxIndex, float value) {
+void insertValue(float* array, size_t maxIndex, float value) {
 	insertValueAt(array, getInsertIndex(array, maxIndex, value), maxIndex, value);
 }
 
@@ -66,7 +66,7 @@ void insertValue(float* array, int maxIndex, float value) {
  * 				resultBuffer.
  */
 void sort(float* array, float* resultBuffer, size_t size) {
-	for (int i = 0; i < size; i++) {
+	for (size_t i = 0; i < size; i++) {
 		insertValue(resultBuffer, i, array[i]);
 	}
 }
