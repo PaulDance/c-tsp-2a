@@ -1,13 +1,13 @@
 #include <stdint.h>
 
 
-#ifndef MEMORY_ALLOC_H
-#define MEMORY_ALLOC_H
+#ifndef MEMORY_ALLOCATOR_H
+#define MEMORY_ALLOCATOR_H
 
 /**
  * A block that does not exists.
  */
-#define NULL_BLOCK INT64_MAX
+#define NULL_BLOCK INT32_MAX
 /**
  * Default number of blocks.
  */
@@ -48,7 +48,7 @@ typedef struct MemoryAllocator {
 	/**
 	 * Index of the first available block.
 	 */
-	int firstBlock;
+	unsigned int firstBlock;
 	/**
 	 * Error of the last memory operation. to be updated during
 	 * each call to freeMemory/memory_alloc/initMemory.
@@ -59,10 +59,10 @@ typedef struct MemoryAllocator {
 MemoryAllocator memory;
 
 void initMemory();
-int nbOfConsecutiveBlocks(int first);
+unsigned int nbOfConsecutiveBlocks(unsigned int first);
 void printMemory();
 int allocateMemory(size_t size);
 void freeMemory(int addr, size_t size);
 void printMemoryError(MemoryErrorNumber errorNumber);
 
-#endif    /* MEMORY_ALLOC_H */
+#endif    /* MEMORY_ALLOCATOR_H */

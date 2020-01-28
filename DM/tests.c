@@ -8,7 +8,7 @@
 #include <math.h>
 #include <setjmp.h>
 #include <cmocka.h>
-#include "memory_alloc.h"
+#include "memory-allocator.h"
 
 
 /**
@@ -17,7 +17,7 @@
 void useBuffer(int startIndex, size_t size) {
 	char* ptr = (char*) &memory.blocks[startIndex];
 	
-	for (int i = 0; i < size; i++) {
+	for (size_t i = 0; i < size; i++) {
 		ptr[i] = 'a' + i;
 	}
 }

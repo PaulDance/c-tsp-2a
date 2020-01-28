@@ -1,20 +1,42 @@
 #include <stdio.h>
-#include "memory_alloc.h"
+#include "memory-allocator.h"
 
 
 /**
  * Initialize the memory allocator
  */
 void initMemory() {
-	/* TODO */
+	memory.availableBlocks = DEFAULT_SIZE;
+	memory.firstBlock = 0;
+	
+	for (unsigned int i = memory.firstBlock; i < memory.availableBlocks - 1; i++) {
+		memory.blocks[i] = i + 1;
+	}
+	
+	memory.blocks[memory.availableBlocks - 1] = NULL_BLOCK;
+	memory.lastErrorNumber = SUCCESS_SIGNAL;
 }
 
 /**
  * Return the number of consecutive blocks starting from first.
  */
-int nbOfConsecutiveBlocks(int first) {
-	/* TODO */
-	return -1;
+unsigned int nbOfConsecutiveBlocks(unsigned int first) {
+	unsigned int i = first;
+	unsigned int consecutiveCount = 0, totalCount = 0;
+	
+	while (i != NULL_BLOCK) {
+		if (memory.blocks[i] == (i + 1)) {
+			consecutiveCount += 1;
+		}
+		else {
+			totalCount += consecutiveCount;
+			consecutiveCount = 0;
+		}
+		
+		i = memory.blocks[i];
+	}
+	
+	return totalCount;
 }
 
 /* Reorder memory blocks */
@@ -27,7 +49,6 @@ void reorderMemory() {
  * memory block.
  */
 int allocateMemory(size_t size) {
-	/* TODO */
 	return -1;
 }
 
@@ -50,9 +71,12 @@ void printMemory() {
 	printMemoryError(memory.lastErrorNumber);
 	printf("\tContent:  ");
 	
-	/* TODO: browse the available blocks and print their index. */
+	for (unsigned int i = memory.firstBlock; i != NULL_BLOCK; i = memory.blocks[i]) {
+		printf("[%i] -> ", i);
+	}
 	
-	printf("\n---------------------------------\n");
+	puts("NULL_BLOCK");
+	printf("---------------------------------\n");
 }
 
 
