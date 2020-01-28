@@ -22,21 +22,20 @@ void initMemory() {
  */
 unsigned int nbOfConsecutiveBlocks(unsigned int first) {
 	unsigned int i = first;
-	unsigned int consecutiveCount = 0, totalCount = 0;
+	unsigned int count = 1;
 	
 	while (i != NULL_BLOCK) {
-		if (memory.blocks[i] == (i + 1)) {
-			consecutiveCount += 1;
+		if (memory.blocks[i] == i + 1) {
+			count++;
 		}
 		else {
-			totalCount += consecutiveCount;
-			consecutiveCount = 0;
+			return count;
 		}
 		
 		i = memory.blocks[i];
 	}
 	
-	return totalCount;
+	return count;
 }
 
 /* Reorder memory blocks */
@@ -44,19 +43,64 @@ void reorderMemory() {
 	/* TODO (exercise 2) */
 }
 
+unsigned int sizeToBlocks(size_t size) {
+	return size / sizeof(memory_page_t) + (size % sizeof(memory_page_t) != 0);
+}
+
 /**
  * Allocate size consecutive bytes and return the index of the first
  * memory block.
  */
 int allocateMemory(size_t size) {
-	return -1;
+	unsigned int sizeInBlocks = sizeToBlocks(size);
+	
+	if (sizeInBlocks > memory.availableBlocks) {
+		memory.lastErrorNumber = NO_MEMORY_ERROR;
+		return -1;
+	}
+	else {
+		unsigned int count, lastAvailableBlock = memory.firstBlock, i = lastAvailableBlock;
+		
+		while (i != NULL_BLOCK) {
+			count = nbOfConsecutiveBlocks(i);
+			
+			if (count < sizeInBlocks) {
+				lastAvailableBlock = i + count - 1;
+				i = memory.blocks[lastAvailableBlock];
+			}
+			else {
+				if (i == memory.firstBlock) {
+					memory.firstBlock = memory.blocks[i + sizeInBlocks - 1];
+				}
+				else {
+					memory.blocks[lastAvailableBlock] = memory.blocks[i + sizeInBlocks - 1];
+				}
+				
+				memory.availableBlocks -= sizeInBlocks;
+				memory.lastErrorNumber = SUCCESS_SIGNAL;
+				return i;
+			}
+		}
+		
+		memory.lastErrorNumber = NO_MEMORY_ERROR;
+		return -1;
+	}
 }
 
 /**
  * Free the size bytes memory space starting at address addr.
  */
-void freeMemory(int addr, size_t size) {
-	/* TODO */
+void freeMemory(unsigned int addr, size_t size) {
+	unsigned int sizeInBlocks = sizeToBlocks(size);
+	
+	for (unsigned int i = addr; i < addr + sizeInBlocks - 1; i++) {			// The free function cannot be in O(1) because the linked
+		memory.blocks[i] = i + 1;											// list has to be written again, so it is in O(sizeInBlocks).
+	}
+	
+	memory.blocks[addr + sizeInBlocks - 1] = memory.firstBlock;
+	memory.firstBlock = addr;
+	memory.availableBlocks += sizeInBlocks;
+	memory.lastErrorNumber = SUCCESS_SIGNAL;
 }
 
 /**

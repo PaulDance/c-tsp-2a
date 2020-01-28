@@ -16,7 +16,7 @@
 /**
  * A memory page is 8 bytes (64 bits).
  */
-typedef int64_t memory_page_t;
+typedef uint64_t memory_page_t;
 
 /**
  * Result of the last memory operation.
@@ -62,7 +62,7 @@ void initMemory();
 unsigned int nbOfConsecutiveBlocks(unsigned int first);
 void printMemory();
 int allocateMemory(size_t size);
-void freeMemory(int addr, size_t size);
+void freeMemory(unsigned int addr, size_t size);
 void printMemoryError(MemoryErrorNumber errorNumber);
 
 #endif    /* MEMORY_ALLOCATOR_H */

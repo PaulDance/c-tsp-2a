@@ -44,7 +44,7 @@ void testAllocFree(size_t size, int nbPages, int availableBlocks) {
 /* allocate size bytes */
 int testAlloc(size_t size) {
 	int res = allocateMemory(size);
-	assert_int_equal(memory.lastErrorNumber, SUCCESS_SIGNAL); // allocateMemory should be successfull
+	assert_int_equal(memory.lastErrorNumber, SUCCESS_SIGNAL); // allocateMemory should be successful
 	assert_int_not_equal(res, -1);           // allocateMemory should return something != -1
 	assert_true(res >= 0 && res < DEFAULT_SIZE);
 	
