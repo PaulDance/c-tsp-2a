@@ -56,6 +56,9 @@ typedef struct MemoryAllocator {
 	MemoryErrorNumber lastErrorNumber;
 } MemoryAllocator;
 
+/**
+ * The "kernel"'s memory representation.
+ */
 MemoryAllocator memory;
 
 void initMemory();

@@ -4,22 +4,28 @@
 
 
 /**
- * Initialize the memory allocator
+ * Initializes the memory allocator.
  */
 void initMemory() {
-	memory.availableBlocks = DEFAULT_SIZE;
-	memory.firstBlock = 0;
+	memory.availableBlocks = DEFAULT_SIZE;									// Initial size
+	memory.firstBlock = 0;													// and first block;
 	
 	for (unsigned int i = memory.firstBlock; i < memory.availableBlocks - 1; i++) {
-		memory.blocks[i] = i + 1;
+		memory.blocks[i] = i + 1;											// write the sequential linked list,
 	}
 	
-	memory.blocks[memory.availableBlocks - 1] = NULL_BLOCK;
-	memory.lastErrorNumber = SUCCESS_SIGNAL;
+	memory.blocks[memory.availableBlocks - 1] = NULL_BLOCK;					// connect the last block to nothing
+	memory.lastErrorNumber = SUCCESS_SIGNAL;								// and signal a success.
 }
 
 /**
- * Return the number of consecutive blocks starting from first.
+ * Returns the number of consecutive blocks starting from
+ * the given memory block index first. It counts one section
+ * of consecutive blocks that follow after first, the result
+ * is thus always greater than or equals to 1.
+ * 
+ * @param first The memory block index to start counting from.
+ * @return The number of consecutive blocks from first.
  */
 unsigned int nbOfConsecutiveBlocks(unsigned int first) {
 	unsigned int i = first;
@@ -39,102 +45,132 @@ unsigned int nbOfConsecutiveBlocks(unsigned int first) {
 	return count;
 }
 
+/**
+ * Swaps two linked blocks of the memory from left to right.
+ * 
+ * @param leftIndex The index of the previous block, i.e. the
+ *					parent of the middleIndex in the linked
+ *					list that is the memory. If there is no
+ *					such parent because middleIndex is the first
+ *					block of the memory, then it is ignored.
+ * @param middleIndex The index of the block to push to the
+ *					right of the memory.
+ * @return The next left index.
+ */
 unsigned int swapBlocksRight(unsigned int leftIndex, unsigned int middleIndex) {
-	unsigned int tmp = memory.blocks[middleIndex];
-	memory.blocks[middleIndex] = memory.blocks[tmp];
-	memory.blocks[tmp] = middleIndex;
+	unsigned int rightIndex = memory.blocks[middleIndex];					// Saving the index on the right,
+	memory.blocks[middleIndex] = memory.blocks[rightIndex];					// the middle block is connected to its right,
+	memory.blocks[rightIndex] = middleIndex;								// and the right block to the middle one;
 	
-	if (leftIndex != NULL_BLOCK) {
-		memory.blocks[leftIndex] = tmp;
+	if (middleIndex == memory.firstBlock) {									// If the given block has no parent,
+		memory.firstBlock = rightIndex;										// then make the new middle block the new first,
+	}
+	else {
+		memory.blocks[leftIndex] = rightIndex;								// otherwise, the left block is connected to the new middle;
 	}
 	
-	if (middleIndex == memory.firstBlock) {
-		memory.firstBlock = tmp;
-	}
-	
-	return tmp;
+	return rightIndex;														// finally the next left index is the new middle.
 }
 
-/* Reorder memory blocks */
+/**
+ * Reorders memory blocks by applying a bubble sort.
+ */
 void reorderMemory() {
-	unsigned int i, iterNb, lastIndex, iterLimit = memory.availableBlocks - 1;
-	bool swapped;
+	unsigned int i, iterNb, leftIndex, iterLimit = memory.availableBlocks - 1;
+	bool swapped = true;													// "swapped" optimizes the bubble sort.
 	
-	do {
+	while (swapped) {														// While the list is not sorted,
 		swapped = false;
-		i = memory.firstBlock;
+		i = memory.firstBlock;												// beginning at the first element,
 		iterNb = 0;
-		lastIndex = NULL_BLOCK;
+		leftIndex = NULL_BLOCK;
 		
-		while (iterNb < iterLimit) {
-			if (i > memory.blocks[i]) {
-				lastIndex = swapBlocksRight(lastIndex, i);
+		while (iterNb < iterLimit) {										// a bubble pops up to the limit (last index):
+			if (i > memory.blocks[i]) {										// if the current index is greater than its successor,
+				leftIndex = swapBlocksRight(leftIndex, i);					// then they are swapped,
 				swapped = true;
 			}
 			else {
-				lastIndex = i;
-				i = memory.blocks[i];
+				leftIndex = i;												// otherwise, follow the link to iterate on the
+				i = memory.blocks[i];										// next block to make it pop up.
 			}
 			
 			iterNb++;
 		}
 		
 		iterLimit--;
-	} while (swapped);
+	}
 	
-	memory.lastErrorNumber = SUCCESS_SIGNAL;
+	memory.lastErrorNumber = SUCCESS_SIGNAL;								// The memory is reordered successfully.
 }
 
+/**
+ * Computes the minimum number of blocks required to store
+ * a given amount of bytes. It is the ceiling of the division
+ * of the given number of bytes and the memory page size.
+ * 
+ * @example sizeToBlocks(3) == 1 (when sizeof(memory_page_t) == 8)
+ * @example sizeToBlocks(8) == 1 (idem)
+ * @example sizeToBlocks(9) == 2 (idem)
+ * 
+ * @param size The number of bytes to allocate or free.
+ * @return The conversion in number of blocks.
+ */
 unsigned int sizeToBlocks(size_t size) {
 	return size / sizeof(memory_page_t) + (size % sizeof(memory_page_t) != 0);
 }
 
 /**
- * Allocate size consecutive bytes and return the index of the first
+ * Allocates size consecutive bytes and returns the index of the first
  * memory block.
+ * 
+ * @param size The number of bytes to allocate.
+ * @return The index of the starting point of the memory section if
+ * 			successful, -1 otherwise along with an associated memory
+ * 			error code.
  */
 int allocateMemory(size_t size) {
 	unsigned int sizeInBlocks = sizeToBlocks(size);
 	
-	if (sizeInBlocks > memory.availableBlocks) {
-		memory.lastErrorNumber = NO_MEMORY_ERROR;
+	if (sizeInBlocks > memory.availableBlocks) {							// If the user asks for more than is available,
+		memory.lastErrorNumber = NO_MEMORY_ERROR;							// return an error directly;
 		return -1;
 	}
 	else {
-		if (memory.lastErrorNumber == SHOULD_PACK_ERROR) {
-			reorderMemory();
+		if (memory.lastErrorNumber == SHOULD_PACK_ERROR) {					// if the last allocate terminated on a SHOULD_PACK,
+			reorderMemory();												// then sort the memory to free bigger contiguous sections;
 		}
 		
 		unsigned int count, lastAvailableBlock = memory.firstBlock, i = lastAvailableBlock;
 		
-		while (i != NULL_BLOCK) {
+		while (i != NULL_BLOCK) {											// while the end of the list is not reached,
 			count = nbOfConsecutiveBlocks(i);
 			
-			if (count < sizeInBlocks) {
-				lastAvailableBlock = i + count - 1;
+			if (count < sizeInBlocks) {										// if the count here is not enough,
+				lastAvailableBlock = i + count - 1;							// then get directly to the next free section;
 				i = memory.blocks[lastAvailableBlock];
 			}
-			else {
-				if (i == memory.firstBlock) {
-					memory.firstBlock = memory.blocks[i + sizeInBlocks - 1];
+			else {															// otherwise, actually allocate the needed section:
+				if (i == memory.firstBlock) {								// if the allocation can be done at the start,
+					memory.firstBlock = memory.blocks[i + sizeInBlocks - 1];// then make the last block's successor the new first block;
 				}
-				else {
+				else {														// otherwise, connect the parent block to jump over the section;
 					memory.blocks[lastAvailableBlock] = memory.blocks[i + sizeInBlocks - 1];
 				}
 				
-				memory.availableBlocks -= sizeInBlocks;
-				memory.lastErrorNumber = SUCCESS_SIGNAL;
-				return i;
+				memory.availableBlocks -= sizeInBlocks;						// finally, decrement the number of available blocks,
+				memory.lastErrorNumber = SUCCESS_SIGNAL;					// signal the success of the operation
+				return i;													// and return the first index of the allocated section;
 			}
 		}
 		
-		memory.lastErrorNumber = SHOULD_PACK_ERROR;
-		return -1;
+		memory.lastErrorNumber = SHOULD_PACK_ERROR;							// if no contiguous section big enough was found,
+		return -1;															// signal a SHOULD_PACK and end on an error.
 	}
 }
 
 /**
- * Free the size bytes memory space starting at address addr.
+ * Frees the size bytes memory space starting at address addr.
  */
 void freeMemory(unsigned int addr, size_t size) {
 	unsigned int sizeInBlocks = sizeToBlocks(size);
@@ -143,9 +179,9 @@ void freeMemory(unsigned int addr, size_t size) {
 		memory.blocks[i] = i + 1;											// list has to be written again, so it is in O(sizeInBlocks).
 	}
 	
-	memory.blocks[addr + sizeInBlocks - 1] = memory.firstBlock;
-	memory.firstBlock = addr;
-	memory.availableBlocks += sizeInBlocks;
+	memory.blocks[addr + sizeInBlocks - 1] = memory.firstBlock;				// The end block is connected to the current list head,
+	memory.firstBlock = addr;												// the beginning block becomes the new list head,
+	memory.availableBlocks += sizeInBlocks;									// and the number of available blocks is incremented.
 }
 
 /**
@@ -168,7 +204,6 @@ void printMemory() {
 	printf("---------------------------------\n");
 }
 
-
 /**
  * Print a message corresponding to the given error number.
  */
@@ -187,5 +222,3 @@ void printMemoryError(MemoryErrorNumber errorNumber) {
 			break;
 	}
 }
-
-
