@@ -193,7 +193,7 @@ void testExo2Reorder() {
 	}
 	// the available blocks should be:
 	// [0] -> [2] -> [4] -> [6] -> [8] -> [10] -> [12] -> [14] -> NULL_BLOCK
-	//  printMemory();
+	//printMemory();
 	
 	int res = allocateMemory(sizeof(memory_page_t) * 2);
 	// allocation should fail as there's no 2 consecutive blocks
@@ -208,12 +208,11 @@ void testExo2Reorder() {
 	}
 	// the available blocks should be something like:
 	// [15] -> [13] -> [11] -> [9] -> [7] -> [5] -> [3] -> [1] -> [0] -> [2] -> [4] -> [6] -> [8] -> [10] -> [12] -> [14] -> NULL_BLOCK
-	printMemory();
+	//printMemory();
 	
 	// Now, there are 16 available blocks (but probably randomly distributed)
-	// This call may trigger the memory reordering function, and successfully allocate 2 blocks
+	// This call should trigger the memory reordering function, and successfully allocate 2 blocks
 	res = allocateMemory(sizeof(memory_page_t) * 2);
-	// allocation should fail as there's no 2 consecutive blocks
 	assert_int_equal(memory.lastErrorNumber, SUCCESS_SIGNAL);
 	
 	// the available blocks should be something like:
@@ -221,7 +220,8 @@ void testExo2Reorder() {
 	//printMemory();
 }
 
-int main(int argc, char** argv) {
+
+int main() {
 	const struct CMUnitTest tests[] = {
 			/*
 			 * A few tests for exercise 1.

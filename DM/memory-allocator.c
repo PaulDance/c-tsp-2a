@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include "memory-allocator.h"
 
 
@@ -38,9 +39,50 @@ unsigned int nbOfConsecutiveBlocks(unsigned int first) {
 	return count;
 }
 
+unsigned int swapBlocksRight(unsigned int leftIndex, unsigned int middleIndex) {
+	unsigned int tmp = memory.blocks[middleIndex];
+	memory.blocks[middleIndex] = memory.blocks[tmp];
+	memory.blocks[tmp] = middleIndex;
+	
+	if (leftIndex != NULL_BLOCK) {
+		memory.blocks[leftIndex] = tmp;
+	}
+	
+	if (middleIndex == memory.firstBlock) {
+		memory.firstBlock = tmp;
+	}
+	
+	return tmp;
+}
+
 /* Reorder memory blocks */
 void reorderMemory() {
-	/* TODO (exercise 2) */
+	unsigned int i, iterNb, lastIndex, iterLimit = memory.availableBlocks - 1;
+	bool swapped;
+	
+	do {
+		swapped = false;
+		i = memory.firstBlock;
+		iterNb = 0;
+		lastIndex = NULL_BLOCK;
+		
+		while (iterNb < iterLimit) {
+			if (i > memory.blocks[i]) {
+				lastIndex = swapBlocksRight(lastIndex, i);
+				swapped = true;
+			}
+			else {
+				lastIndex = i;
+				i = memory.blocks[i];
+			}
+			
+			iterNb++;
+		}
+		
+		iterLimit--;
+	} while (swapped);
+	
+	memory.lastErrorNumber = SUCCESS_SIGNAL;
 }
 
 unsigned int sizeToBlocks(size_t size) {
@@ -59,6 +101,10 @@ int allocateMemory(size_t size) {
 		return -1;
 	}
 	else {
+		if (memory.lastErrorNumber == SHOULD_PACK_ERROR) {
+			reorderMemory();
+		}
+		
 		unsigned int count, lastAvailableBlock = memory.firstBlock, i = lastAvailableBlock;
 		
 		while (i != NULL_BLOCK) {
@@ -82,7 +128,7 @@ int allocateMemory(size_t size) {
 			}
 		}
 		
-		memory.lastErrorNumber = NO_MEMORY_ERROR;
+		memory.lastErrorNumber = SHOULD_PACK_ERROR;
 		return -1;
 	}
 }
@@ -100,7 +146,6 @@ void freeMemory(unsigned int addr, size_t size) {
 	memory.blocks[addr + sizeInBlocks - 1] = memory.firstBlock;
 	memory.firstBlock = addr;
 	memory.availableBlocks += sizeInBlocks;
-	memory.lastErrorNumber = SUCCESS_SIGNAL;
 }
 
 /**

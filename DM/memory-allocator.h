@@ -61,6 +61,7 @@ MemoryAllocator memory;
 void initMemory();
 unsigned int nbOfConsecutiveBlocks(unsigned int first);
 void printMemory();
+void reorderMemory();
 int allocateMemory(size_t size);
 void freeMemory(unsigned int addr, size_t size);
 void printMemoryError(MemoryErrorNumber errorNumber);
