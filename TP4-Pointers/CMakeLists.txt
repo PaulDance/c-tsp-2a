@@ -8,3 +8,4 @@ add_compile_options(-O0 -Wall -Wextra -Wold-style-cast -Wdouble-promotion
 add_executable(ex1-first-pointers ex1-first-pointers.c)
 add_executable(ex2-arrays-pointers ex2-arrays-pointers.c)
 add_executable(ex3-args ex3-args.c)
+add_executable(ex4-strings.c ex4-strings.c)
