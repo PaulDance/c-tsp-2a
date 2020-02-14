@@ -59,6 +59,16 @@ void push(LinkedList* linkedList, void* element) {
 	linkedList->head = element;
 }
 
+void pushLast(LinkedList* linkedList, void* element) {
+	LinkedList* ll = linkedList;
+	
+	while (!isEmpty(ll)) {
+		ll = ll->tail;
+	}
+	
+	push(ll, element);
+}
+
 void* pop(LinkedList* linkedList) {
 	if (isEmpty(linkedList)) {
 		return NULL;
@@ -71,4 +81,86 @@ void* pop(LinkedList* linkedList) {
 		
 		return result;
 	}
+}
+
+void* getLast(LinkedList* linkedList) {
+	if (isEmpty(linkedList)) {
+		return NULL;
+	}
+	else {
+		LinkedList* ll = linkedList;
+		
+		while (!isEmpty(ll->tail)) {
+			ll = ll->tail;
+		}
+		
+		return ll->head;
+	}
+}
+
+void* popLast(LinkedList* linkedList) {
+	if (isEmpty(linkedList)) {
+		return NULL;
+	}
+	else {
+		LinkedList* ll = linkedList;
+		
+		while (!isEmpty(ll->tail)) {
+			ll = ll->tail;
+		}
+		
+		void* result = ll->head;
+		
+		ll->head = ll->tail->head;
+		ll->tail = ll->tail->tail;
+		
+		return result;
+	}
+}
+
+size_t getLength(LinkedList* linkedList) {
+	size_t length = 0UL;
+	
+	for (LinkedList* ll = linkedList; !isEmpty(ll); ll = ll->tail) {
+		length++;
+	}
+	
+	return length;
+}
+
+void insertElementAt(LinkedList* linkedList, void* element, size_t index) {
+	LinkedList* ll = linkedList;
+	
+	while (!isEmpty(ll) && index != 0UL) {
+		ll = ll->tail;
+		index--;
+	}
+	
+	if (index == 0UL) {
+		push(ll, element);
+	}
+}
+
+void* removeElementAt(LinkedList* linkedList, size_t index) {
+	LinkedList* ll = linkedList;
+	
+	while (!isEmpty(ll) && index != 0UL) {
+		ll = ll->tail;
+		index--;
+	}
+	
+	if (index != 0UL) {
+		return NULL;
+	}
+	else {
+		return pop(ll);
+	}
+}
+
+void freeLinkedList(LinkedList* linkedList) {
+	if (!isEmpty(linkedList)) {
+		freeLinkedList(linkedList->tail);
+	}
+	
+	free(linkedList);
 }
