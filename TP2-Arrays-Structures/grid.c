@@ -1,7 +1,3 @@
-//
-// Created by pauldance on 25/01/2020.
-//
-
 #include <stdlib.h>
 #include <stdio.h>
 #include "grid.h"
@@ -18,17 +14,17 @@
  * @param pixel The character value to put in all positions.
  */
 void initGrid(Grid* grid, size_t width, size_t height, char pixel) {
-	grid->width = width;
-	grid->height = height;
-	grid->matrix = (char**) malloc(grid->height * sizeof(char*));
-	
-	for (size_t i = 0; i < grid->height; i++) {
-		grid->matrix[i] = (char*) malloc(grid->width * sizeof(char));
-		
-		for (size_t j = 0; j < grid->width; j++) {
-			grid->matrix[i][j] = pixel;
-		}
-	}
+    grid->width = width;
+    grid->height = height;
+    grid->matrix = (char**) malloc(grid->height * sizeof(char*));
+
+    for (size_t i = 0; i < grid->height; i++) {
+        grid->matrix[i] = (char*) malloc(grid->width * sizeof(char));
+
+        for (size_t j = 0; j < grid->width; j++) {
+            grid->matrix[i][j] = pixel;
+        }
+    }
 }
 
 /**
@@ -40,9 +36,9 @@ void initGrid(Grid* grid, size_t width, size_t height, char pixel) {
  * @return The pointer to the new Grid value.
  */
 Grid* newGrid(size_t width, size_t height, char pixel) {
-	Grid* grid = (Grid*) malloc(sizeof(Grid));
-	initGrid(grid, width, height, pixel);
-	return grid;
+    Grid* grid = (Grid*) malloc(sizeof(Grid));
+    initGrid(grid, width, height, pixel);
+    return grid;
 }
 
 /**
@@ -53,13 +49,13 @@ Grid* newGrid(size_t width, size_t height, char pixel) {
  * @param grid The pointer to the Grid to print.
  */
 void printGrid(Grid* grid) {
-	for (size_t i = 0; i < grid->height; i++) {
-		for (size_t j = 0; j < grid->width; j++) {
-			putchar(grid->matrix[i][j]);
-		}
-		
-		puts("");
-	}
+    for (size_t i = 0; i < grid->height; i++) {
+        for (size_t j = 0; j < grid->width; j++) {
+            putchar(grid->matrix[i][j]);
+        }
+
+        puts("");
+    }
 }
 
 /**
@@ -67,10 +63,10 @@ void printGrid(Grid* grid) {
  * @param grid The pointer to the Grid structure value.
  */
 void freeGrid(Grid* grid) {
-	for (size_t i = 0; i < grid->height; i++) {
-		free(grid->matrix[i]);
-	}
-	
-	free(grid->matrix);
-	free(grid);
+    for (size_t i = 0; i < grid->height; i++) {
+        free(grid->matrix[i]);
+    }
+
+    free(grid->matrix);
+    free(grid);
 }

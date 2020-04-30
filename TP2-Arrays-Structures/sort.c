@@ -1,7 +1,3 @@
-//
-// Created by pauldance on 25/01/2020.
-//
-
 #include "sort.h"
 
 
@@ -17,13 +13,13 @@
  * @return The insertion index.
  */
 size_t getInsertIndex(const float* array, size_t maxIndex, float value) {
-	for (size_t i = 0; i < maxIndex; i++) {
-		if (array[i] > value) {
-			return i;
-		}
-	}
-	
-	return maxIndex;
+    for (size_t i = 0; i < maxIndex; i++) {
+        if (array[i] > value) {
+            return i;
+        }
+    }
+
+    return maxIndex;
 }
 
 /**
@@ -36,11 +32,11 @@ size_t getInsertIndex(const float* array, size_t maxIndex, float value) {
  * @param value The value to insert.
  */
 void insertValueAt(float* array, size_t index, size_t maxIndex, float value) {
-	for (size_t i = maxIndex; i > index; i--) {
-		array[i] = array[i - 1];
-	}
-	
-	array[index] = value;
+    for (size_t i = maxIndex; i > index; i--) {
+        array[i] = array[i - 1];
+    }
+
+    array[index] = value;
 }
 
 /**
@@ -53,7 +49,7 @@ void insertValueAt(float* array, size_t index, size_t maxIndex, float value) {
  * @param value The value to insert.
  */
 void insertValue(float* array, size_t maxIndex, float value) {
-	insertValueAt(array, getInsertIndex(array, maxIndex, value), maxIndex, value);
+    insertValueAt(array, getInsertIndex(array, maxIndex, value), maxIndex, value);
 }
 
 /**
@@ -66,7 +62,7 @@ void insertValue(float* array, size_t maxIndex, float value) {
  * 				resultBuffer.
  */
 void sort(float* array, float* resultBuffer, size_t size) {
-	for (size_t i = 0; i < size; i++) {
-		insertValue(resultBuffer, i, array[i]);
-	}
+    for (size_t i = 0; i < size; i++) {
+        insertValue(resultBuffer, i, array[i]);
+    }
 }
