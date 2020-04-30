@@ -9,14 +9,14 @@
 #include <fcntl.h>
 
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     if (argc != 2) {
         fprintf(stderr, "Expected one argument.\n");
         return 1;
     }
 
     unsigned short number = strtoul(argv[1], NULL, 0);
-    sem_t *sem = sem_open("/sync", O_CREAT, S_IRWXU, 4);
+    sem_t* sem = sem_open("/sync", O_CREAT, S_IRWXU, 4);
     sem_unlink("/sync");
 
     for (unsigned short i = 0; i < number; i++) {

@@ -18,7 +18,7 @@ int main() {
         fopen(SYNC_FILE, "w+");
     } else {
         printf("I am your father.\n");
-        FILE *syncFile = NULL;
+        FILE* syncFile = NULL;
 
         while ((syncFile = fopen(SYNC_FILE, "r")) == NULL) {
             usleep(10000);

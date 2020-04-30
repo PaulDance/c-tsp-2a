@@ -11,17 +11,17 @@
 #include <string.h>
 
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     if (argc != 3) {
         fprintf(stderr, "Expected 2 arguments: a name and a number.\n");
         return 1;
     }
 
-    char *name = argv[1];
+    char* name = argv[1];
     double money = strtod(argv[2], NULL);
     double balance;
 
-    sem_t *sem = sem_open("/bank", O_CREAT, S_IRWXU, 1);
+    sem_t* sem = sem_open("/bank", O_CREAT, S_IRWXU, 1);
     printf("[%i] %p - sem error: %s ", getpid(), sem, strerror(errno));
 
     if (sem == SEM_FAILED) {
@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
         printf("[%i] %p - sem no wait.\n", getpid(), sem);
     }
 
-    FILE *file = fopen(name, "r+");
+    FILE* file = fopen(name, "r+");
     printf("[%i] %p - file error: %s\n", getpid(), sem, strerror(errno));
 
     if (file != NULL) {
