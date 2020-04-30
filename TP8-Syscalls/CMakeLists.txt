@@ -14,6 +14,4 @@ add_executable(sem sem.c)
 target_link_libraries(sem Threads::Threads)
 
 add_executable(bank bank.c)
-add_executable(bank-init-sem bank-init-sem.c)
 target_link_libraries(bank Threads::Threads)
-target_link_libraries(bank-init-sem Threads::Threads)
