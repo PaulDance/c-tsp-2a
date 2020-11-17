@@ -14,9 +14,9 @@
 #define MAXLEN  32
 
 struct pokemon {
-  int  unused;
-  char name[MAXLEN];
-  char type[2][MAXLEN];
+    int unused;
+    char name[MAXLEN];
+    char type[2][MAXLEN];
 };
 
 #endif

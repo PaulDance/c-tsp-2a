@@ -30,20 +30,20 @@ static struct pokemon_type* pokemon_types = NULL;
  */
 struct pokemon_type* find(const char* type) {
     struct pokemon_type* pt = pokemon_types;
-    
+
     while (pt != NULL && strncmp(pt->type, type, MAXLEN) != 0) {
         pt = pt->next;
     }
-    
+
     return pt;
 }
 
 void add(const char* type, int n) {
     size_t len = strnlen(type, MAXLEN);
-    
+
     if (len != 0) {
         struct pokemon_type* old_pt = find(type);
-        
+
         if (old_pt != NULL) {           // If the type already exists in the list,
             old_pt->n += n;             // increment its count;
         } else {                        // otherwise add it as the head.
@@ -58,7 +58,7 @@ void add(const char* type, int n) {
 
 void print(FILE* f) {
     for (struct pokemon_type* pt = pokemon_types;
-            pt != NULL; pt = pt->next) {
+         pt != NULL; pt = pt->next) {
         fprintf(f, "%s %i\n", pt->type, pt->n);
     }
 }
@@ -75,9 +75,9 @@ int main() {
     add("Féérique", 4);
     add("Eau", 5);
     add("Féérique", 3);
-    
+
     print(stdout);
     cleanup();
-    
+
     return 0;
 }
