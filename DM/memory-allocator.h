@@ -22,38 +22,38 @@ typedef uint64_t memory_page_t;
  * Result of the last memory operation.
  */
 typedef enum MemoryErrorNumber {
-	/**
-	 * Success signal.
-	 */
-	SUCCESS_SIGNAL,
-	/**
-	 * Error: not enough memory signal.
-	 */
-	NO_MEMORY_ERROR,
-	/**
-	 * Error: not enough consecutive blocks signal.
-	 */
-	SHOULD_PACK_ERROR,
+    /**
+     * Success signal.
+     */
+    SUCCESS_SIGNAL,
+    /**
+     * Error: not enough memory signal.
+     */
+    NO_MEMORY_ERROR,
+    /**
+     * Error: not enough consecutive blocks signal.
+     */
+    SHOULD_PACK_ERROR,
 } MemoryErrorNumber;
 
 typedef struct MemoryAllocator {
-	/**
-	 * Blocks that can be allocated.
-	 */
-	memory_page_t blocks[DEFAULT_SIZE];
-	/**
-	 * Number of available blocks.
-	 */
-	size_t availableBlocks;
-	/**
-	 * Index of the first available block.
-	 */
-	unsigned int firstBlock;
-	/**
-	 * Error of the last memory operation. to be updated during
-	 * each call to freeMemory/memory_alloc/initMemory.
-	 */
-	MemoryErrorNumber lastErrorNumber;
+    /**
+     * Blocks that can be allocated.
+     */
+    memory_page_t blocks[DEFAULT_SIZE];
+    /**
+     * Number of available blocks.
+     */
+    size_t availableBlocks;
+    /**
+     * Index of the first available block.
+     */
+    unsigned int firstBlock;
+    /**
+     * Error of the last memory operation. to be updated during
+     * each call to freeMemory/memory_alloc/initMemory.
+     */
+    MemoryErrorNumber lastErrorNumber;
 } MemoryAllocator;
 
 /**
