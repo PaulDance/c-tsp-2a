@@ -37,7 +37,7 @@ int main() {
 
     initArray(array2, 4);
     printArray(array2, 4);
-    
+
     initArray(array1, 4);
     printArray(array1, 4);
 
