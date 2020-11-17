@@ -1,5 +1,4 @@
-
 struct tableau {
-  int size;
-  int* values;
+    int size;
+    int* values;
 };

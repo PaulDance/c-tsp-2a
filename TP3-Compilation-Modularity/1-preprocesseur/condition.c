@@ -9,10 +9,10 @@
 #if (N > 10)
 
 void foo() {
-  printf("N est très grand (%d)\n", N);
+    printf("N est très grand (%d)\n", N);
 }
 
-#elif (N<5)
+#elif (N < 5)
 
 void foo() {
   printf("N est très petit (%d)\n", N);
@@ -25,8 +25,7 @@ void foo() {
 
 #endif
 
-int main(int argc, char**argv) {
-
-  foo();
-  return EXIT_SUCCESS;
+int main(int argc, char** argv) {
+    foo();
+    return EXIT_SUCCESS;
 }

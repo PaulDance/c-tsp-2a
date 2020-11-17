@@ -5,4 +5,4 @@
 
 TYPE foo();
 
-#endif	/* FOO_H */
+#endif    /* FOO_H */

@@ -1,5 +1,5 @@
 #include "foo.h"
 
 TYPE foo() {
-  return 42;
+    return 42;
 }
