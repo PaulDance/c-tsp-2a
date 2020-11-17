@@ -26,7 +26,7 @@ void map_put(struct map* map, int key, void* val) {
             return;
         }
     }
-    
+
     map->array = reallocarray(map->array, map->length + 1, sizeof(struct couple));
     map->array[map->length].key = key;
     map->array[map->length].value = val;
@@ -39,7 +39,7 @@ void* map_get(struct map* map, int key) {
             return map->array[i].value;
         }
     }
-    
+
     return NULL;
 }
 
@@ -47,7 +47,7 @@ void map_free(struct map* map) {
     for (size_t i = 0; i < map->length; i++) {
         free(map->array[i].value);
     }
-    
+
     free(map->array);
     free(map);
 }

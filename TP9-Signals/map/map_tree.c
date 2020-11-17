@@ -29,7 +29,7 @@ struct bt* bt_insert(struct bt* tree, int key, void* value) {
     } else {
         tree->value = value;
     }
-    
+
     return tree;
 }
 
@@ -65,7 +65,7 @@ void bt_free(struct bt* bt) {
     if (bt->right != NULL) {
         bt_free(bt->right);
     }
-    
+
     free(bt->value);
     free(bt);
 }
